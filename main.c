@@ -45,5 +45,6 @@ int main (int argc, char *argv[])
   /* Enter the main loop */
   gtk_widget_show_all (win);
   gtk_main ();
+  // Modification
   return 0;
 }
