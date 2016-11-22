@@ -30,7 +30,22 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-L" />
+			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/" />
+			<Add directory="interface" />
+			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/include" />
 		</Compiler>
+		<Linker>
+			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/" />
+		</Linker>
+		<Unit filename="Utilisateur.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Utilisateur.h" />
+		<Unit filename="include/interfaceConnection.h" />
+		<Unit filename="interface/interfaceConnection.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
