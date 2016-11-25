@@ -30,18 +30,17 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-L" />
+			<Add option="`pkg-config gtk+-3.0 --cflags`" />
 			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/" />
 			<Add directory="interface" />
 			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/include" />
 		</Compiler>
 		<Linker>
+			<Add option="`pkg-config gtk+-3.0 --libs`" />
 			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/" />
 		</Linker>
-		<Unit filename="Utilisateur.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="Utilisateur.h" />
+		<Unit filename="functions/Utilisateur.c" />
+		<Unit filename="include/Utilisateur.h"/>
 		<Unit filename="include/interfaceConnection.h" />
 		<Unit filename="interface/interfaceConnection.c">
 			<Option compilerVar="CC" />
