@@ -37,12 +37,19 @@
 		</Compiler>
 		<Linker>
 			<Add option="`pkg-config gtk+-3.0 --libs`" />
+			<Add option="`mysql_config --cflags --libs`" />
 			<Add directory="C:/Users/Nouaili/Desktop/ex5/appGRH/" />
 		</Linker>
-		<Unit filename="functions/Utilisateur.c" />
-		<Unit filename="include/Utilisateur.h"/>
+		<Unit filename="functions/Utilisateur.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/Utilisateur.h" />
 		<Unit filename="include/interfaceConnection.h" />
+		<Unit filename="include/interfaceHome.h" />
 		<Unit filename="interface/interfaceConnection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/interfaceHome.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">

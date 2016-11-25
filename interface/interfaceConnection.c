@@ -1,37 +1,36 @@
 #include "../include/interfaceConnection.h"
+#include "../include/interfaceHome.h"
+#include "../include/Utilisateur.h"
 
 
-typedef struct {
-    GtkWidget *username;
-    GtkWidget *password;
-} entriesConnection ;
+
+    GtkWidget *entry_login;
+    GtkWidget *entry_pwd;
 
 
 static void clicked_btn_authentification (GtkWidget *wid,gpointer p)
 {
-    entriesConnection* entries = (entriesConnection*) p;
-    gchar *login = gtk_entry_get_text(GTK_ENTRY(entries->username) );
-    gchar *pwd   = gtk_entry_get_text(GTK_ENTRY(entries->password) );
-    printf("%s" ,login);
-    printf("%s" ,pwd);
+    gchar *login = gtk_entry_get_text(GTK_ENTRY(entry_login) );
+    gchar *pwd   = gtk_entry_get_text(GTK_ENTRY(entry_pwd) );
+    int res=verifierLoginPwd(login,pwd);
+    if(res!=0){
+        gtk_widget_hide (p);
+        creer_home(res);
+        //printf("\nCorrect open %d ^^",res);
 
-    /*
-    if(verifierLoginPwd("Rami","Imar")==TRUE){
-          creer_fenetre_principale(fenetre_principale);
-
+    }else{
+        printf("\n not correct :/");
     }
-    */
+
 }
 
 
 void creer_fenetre_authentification (GtkWidget *win ){
-    GtkWidget *username,*password,*entry_login,*entry_pwd,*tab;
+    GtkWidget *username,*password,*tab;
     GtkWidget *button = NULL;
     GtkWidget *vbox = NULL;
     GtkWidget *hbox = NULL,*usernamebox=NULL,*passwordbox=NULL;;
-    entriesConnection entries;
     GtkWidget *image = NULL;
-    entriesConnection st;
 
     win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -53,19 +52,19 @@ void creer_fenetre_authentification (GtkWidget *win ){
     image = gtk_image_new_from_file("img/users_lock.png");
 
     username = gtk_label_new("Nom d'utilisateur : ");
-    st.username =  gtk_entry_new ();
+    entry_login =  gtk_entry_new ();
     password = gtk_label_new("Mot de Passe : ");
-    gtk_entry_set_placeholder_text (st.username,"");
-    st.password =  gtk_entry_new ();
-    gtk_entry_set_visibility (st.password,FALSE);
-    gtk_entry_set_invisible_char(st.password,'*');
+    gtk_entry_set_placeholder_text (entry_login,"");
+    entry_pwd =  gtk_entry_new ();
+    gtk_entry_set_visibility (entry_pwd,FALSE);
+    gtk_entry_set_invisible_char(entry_pwd,'*');
 
     gtk_box_pack_start (GTK_BOX (vbox), image, TRUE, TRUE, 1);
 
     gtk_box_pack_start (GTK_BOX (usernamebox), username, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (usernamebox), st.username, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (usernamebox), entry_login, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (passwordbox), password, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (passwordbox), st.password, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (passwordbox), entry_pwd, TRUE, TRUE, 0);
 
     gtk_box_pack_start (GTK_BOX (vbox), usernamebox, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), passwordbox, FALSE, FALSE, 0);
@@ -73,7 +72,7 @@ void creer_fenetre_authentification (GtkWidget *win ){
 
     button = gtk_button_new_with_label ("Connecter");
 
-    g_signal_connect (button, "clicked",G_CALLBACK (clicked_btn_authentification), (gpointer) &st);
+    g_signal_connect (button, "clicked",G_CALLBACK (clicked_btn_authentification), win);
 
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
 

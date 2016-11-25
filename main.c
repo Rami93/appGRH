@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include "functions/Utilisateur.h"
 
 
 int main (int argc, char *argv[])

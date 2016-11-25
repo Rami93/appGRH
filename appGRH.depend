@@ -3208,13 +3208,14 @@
 1479762800 c:\users\nouaili\desktop\ex5\appgrh\include\interfaceconnection.h
 	<gtk/gtk.h>
 
-1479968522 source:/home/hosni/Dev/appGRH/interface/interfaceConnection.c
+1480051054 source:/home/hosni/Dev/appGRH/interface/interfaceConnection.c
 	"../include/interfaceConnection.h"
+	"../include/interfaceHome.h"
+	"../include/Utilisateur.h"
 
-1479929995 source:/home/hosni/Dev/appGRH/main.c
+1480047204 source:/home/hosni/Dev/appGRH/main.c
 	<stdlib.h>
 	<gtk/gtk.h>
-	"functions/Utilisateur.h"
 
 1479927777 /home/hosni/Dev/appGRH/Utilisateur.h
 	"Utilisateur.h"
@@ -6045,11 +6046,20 @@
 
 1477347032 /usr/include/gtk-3.0/gtk/gtk-autocleanups.h
 
-1479931716 /home/hosni/Dev/appGRH/include/interfaceConnection.h
+1480050448 /home/hosni/Dev/appGRH/include/interfaceConnection.h
 	<gtk/gtk.h>
 
-1479927777 source:/home/hosni/Dev/appGRH/functions/Utilisateur.c
+1480048478 source:/home/hosni/Dev/appGRH/functions/Utilisateur.c
 	<stdio.h>
 	<string.h>
+	<mysql/mysql.h>
+
+1479927777 /home/hosni/Dev/appGRH/include/Utilisateur.h
 	"Utilisateur.h"
+
+1480050863 /home/hosni/Dev/appGRH/include/interfaceHome.h
+	<gtk/gtk.h>
+
+1480051777 source:/home/hosni/Dev/appGRH/interface/interfaceHome.c
+	"../include/interfaceHome.h"
 
