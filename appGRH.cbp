@@ -43,9 +43,37 @@
 		<Unit filename="functions/Utilisateur.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/dataBase.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="functions/usefullFn.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="include/Utilisateur.h" />
+		<Unit filename="include/dataBase.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="include/dialog.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="include/interfaceConnection.h" />
 		<Unit filename="include/interfaceHome.h" />
+		<Unit filename="include/usefullFn.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="interface/dialog.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="interface/interfaceAdmin.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="interface/interfaceAdmin.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="interface/interfaceConnection.c">
 			<Option compilerVar="CC" />
 		</Unit>

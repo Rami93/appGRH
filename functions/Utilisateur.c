@@ -1,27 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <mysql/mysql.h>
+#include "../include/dataBase.h"
 
-void finish_with_error(MYSQL *con)
-{
-    fprintf(stderr, "%s\n", mysql_error(con));
-    mysql_close(con);
-    exit(1);
-}
 
 int verifierLoginPwd(char * login , char * pwd){
-    MYSQL *con = mysql_init(NULL);
 
-    if (con == NULL)
-    {
-        fprintf(stderr, "mysql_init() failed\n");
-        exit(1);
-    }
-    if (mysql_real_connect(con, "localhost", "hosni", "root",
-          "GRH", 0, NULL, 0) == NULL)
-    {
-      finish_with_error(con);
-    }
+    MYSQL *con = mysql_init(NULL);
+    Connectdb(con);
 
     char querry[100];
     sprintf(querry,"%s%s%s%s%s","SELECT * FROM Utilisateur WHERE login='",login,"' and passw='",pwd,"';");
