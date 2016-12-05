@@ -3,7 +3,7 @@
 #include "../interface/dialog.c"
 
 
-void show_error_invalide(gpointer window);
+void show_error_invalide(gpointer window,char *msj);
 
 
 

@@ -3208,7 +3208,7 @@
 1479762800 c:\users\nouaili\desktop\ex5\appgrh\include\interfaceconnection.h
 	<gtk/gtk.h>
 
-1480383416 source:/home/hosni/Dev/appGRH/interface/interfaceConnection.c
+1480803641 source:/home/hosni/Dev/appGRH/interface/interfaceConnection.c
 	"../include/interfaceConnection.h"
 	"../include/interfaceHome.h"
 	"../include/Utilisateur.h"
@@ -6060,13 +6060,15 @@
 1480310785 /home/hosni/Dev/appGRH/include/interfaceConnection.h
 	<gtk/gtk.h>
 
-1480309715 source:/home/hosni/Dev/appGRH/functions/Utilisateur.c
+1480747265 source:/home/hosni/Dev/appGRH/functions/Utilisateur.c
 	<stdio.h>
 	<string.h>
 	<mysql/mysql.h>
 	"../include/dataBase.h"
+	"../include/Utilisateur.h"
 
-1480310802 /home/hosni/Dev/appGRH/include/Utilisateur.h
+1480747257 /home/hosni/Dev/appGRH/include/Utilisateur.h
+	<gtk/gtk.h>
 
 1480309767 /home/hosni/Dev/appGRH/include/interfaceHome.h
 
@@ -6083,10 +6085,10 @@
 	<glib.h>
 	<gdk-pixbuf/gdk-pixbuf-features.h>
 
-1480309653 /home/hosni/Dev/appGRH/include/dataBase.h
+1480737252 /home/hosni/Dev/appGRH/include/dataBase.h
 	"../functions/dataBase.c"
 
-1480309726 /home/hosni/Dev/appGRH/functions/dataBase.c
+1480737330 /home/hosni/Dev/appGRH/functions/dataBase.c
 	<stdio.h>
 	<string.h>
 	<mysql/mysql.h>
@@ -6094,19 +6096,22 @@
 1480309441 /home/hosni/Dev/appGRH/interface/interfaceHome.c
 	<gtk/gtk.h>
 
-1480312693 /home/hosni/Dev/appGRH/include/dialog.h
+1480718218 /home/hosni/Dev/appGRH/include/dialog.h
 	"../interface/dialog.c"
 
-1480312990 /home/hosni/Dev/appGRH/interface/dialog.c
+1480717937 /home/hosni/Dev/appGRH/interface/dialog.c
 
 1480394217 /home/hosni/Dev/appGRH/include/interfaceAdmin.h
 	"../interface/interfaceAdmin.c"
 
-1480394200 /home/hosni/Dev/appGRH/interface/interfaceAdmin.c
+1480813454 /home/hosni/Dev/appGRH/interface/interfaceAdmin.c
 	"../include/usefullFn.h"
+	"../include/Utilisateur.h"
 
-1480393972 /home/hosni/Dev/appGRH/include/usefullFn.h
+1480737279 /home/hosni/Dev/appGRH/include/usefullFn.h
+	<string.h>
+	<gtk/gtk.h>
 	"../functions/usefullFn.c"
 
-1480392635 /home/hosni/Dev/appGRH/functions/usefullFn.c
+1480737304 /home/hosni/Dev/appGRH/functions/usefullFn.c
 

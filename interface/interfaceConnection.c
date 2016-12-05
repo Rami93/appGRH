@@ -9,7 +9,7 @@ GtkWidget *entry_pwd;
 
 static void clicked_btn_authentification (GtkWidget *wid,gpointer p)
 {
-    gchar *login = gtk_entry_get_text(GTK_ENTRY(entry_login) );
+    /*gchar *login = gtk_entry_get_text(GTK_ENTRY(entry_login) );
     gchar *pwd   = gtk_entry_get_text(GTK_ENTRY(entry_pwd) );
     int res=verifierLoginPwd(login,pwd);
     if(res!=-1){
@@ -17,10 +17,11 @@ static void clicked_btn_authentification (GtkWidget *wid,gpointer p)
         creer_home(res);
 
     }else{
-        show_error_invalide(p);
+        show_error_invalide(p,"\nNom d'utilisateur ou mot de passe incorrect !\nveuillez réessayer.");
         printf("\n not correct :/");
-    }
-
+    }*/
+    gtk_widget_hide(p);
+    creer_home(1);
 }
 
 

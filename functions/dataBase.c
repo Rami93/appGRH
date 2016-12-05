@@ -10,12 +10,14 @@ void finish_with_error(MYSQL *con)
 }
 
 void Connectdb(MYSQL *con){
+    char sr[30],dbu[30],dbpass[30];
     if (con == NULL)
     {
         fprintf(stderr, "mysql_init() failed\n");
         exit(1);
     }
-    if (mysql_real_connect(con, "localhost", "hosni", "root",
+    get_conf_file(sr,dbu,dbpass);
+    if (mysql_real_connect(con, sr, dbu, dbpass,
           "GRH", 0, NULL, 0) == NULL)
     {
       finish_with_error(con);
