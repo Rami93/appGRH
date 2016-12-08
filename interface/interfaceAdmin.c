@@ -1,63 +1,40 @@
 #include "../include/usefullFn.h"
-#include "../include/Utilisateur.h"
+
 
 GtkWidget *server,*dbusername,*dbpassword;
-GtkWidget *cin,*nom,*prenom,*dns,*cnss,*sexe,*email,*numerotel,*ville,*adresse,*pwd_u;
+GtkWidget *cin,*nom,*prenom,*dns,*cnss,*sexe,*email,*numerotel,*ville,*adresse,*pwd_u,*un;
+GtkWidget *view;
+GtkListStore  *store;
+int id;
 
-
-void valid_adduser(GtkWidget *win,gpointer p){
-    employe emp;
-    emp.cinn = gtk_entry_get_text(GTK_ENTRY(cin));
-    emp.nom = gtk_entry_get_text(GTK_ENTRY(nom));
-    emp.prenom = gtk_entry_get_text(GTK_ENTRY(prenom));
-    emp.dns = gtk_entry_get_text(GTK_ENTRY(dns));
-    emp.cnss = gtk_entry_get_text(GTK_ENTRY(cnss));
-    //emp.sexe = gtk_entry_get_text(GTK_ENTRY(sexe));
-    emp.sexe = "Hommmmme";
-    emp.email = gtk_entry_get_text(GTK_ENTRY(email));
-    emp.numerotel = gtk_entry_get_text(GTK_ENTRY(numerotel));
-    emp.ville = gtk_entry_get_text(GTK_ENTRY(ville));
-    emp.adresse = gtk_entry_get_text(GTK_ENTRY(adresse));
-    emp.pwd_u = gtk_entry_get_text(GTK_ENTRY(pwd_u));
-    if((strcmp(emp.cinn,"")==0) || (strcmp(emp.nom,"")==0) || (strcmp(emp.prenom,"")==0) || (strcmp(emp.dns,"")==0) || (strcmp(emp.cnss,"")==0) || (strcmp(emp.email,"")==0) || (strcmp(emp.numerotel,"")==0) ){
-        show_error_invalide(p,"\nIl' y a des champs vide !");
-    }else{
-        if(add_user_db(emp)==-1){
-            show_error_invalide(p,"\nErreur ! verifier les données");
-        }else{
-            gtk_widget_hide(p);
-        }
-    }
-
-
-}
-
-void menu(GtkWidget *win,gpointer p){
-    gtk_widget_hide(p);
-    gtk_widget_hide(win);
+void menu(GtkWidget *win,gpointer p)
+{
+    close_window(win,p);
     creer_home_admin(win);
 }
 
-void listitem_selected (GtkWidget *widget, gpointer *data)
+void cliquer_btn_gerer_cmpts(GtkWidget *wid,gpointer p)
 {
-    g_print ("item selected - %s\n", data);
-}
-
-/// here
-
-void cliquer_btn_gerer_cmpts(GtkWidget *wid,gpointer p){
     GtkWidget *win = NULL;
     creer_fenetre_gerer_comptes(win);
 }
 
-void cliquer_configuration(GtkWidget *wid,gpointer p){
+void cliquer_configuration(GtkWidget *wid,gpointer p)
+{
     config(wid,p);
 }
 
-void creer_home_admin(GtkWidget *win){
+void logout_ad(GtkWidget *win,gpointer p){
+    gtk_widget_hide(p);
+    gtk_widget_hide(win);
+    authentification(win);
+}
+
+void creer_home_admin(GtkWidget *win)
+{
     GtkWidget *button = NULL;
     GtkWidget* text = NULL;
-    GtkWidget *vbox1 ,*vbox2 , *vbox3 = NULL;
+    GtkWidget *vbox1,*vbox2, *vbox3 = NULL;
     GtkWidget *hbox = NULL;
     GtkWidget *entry_login = NULL;
     GtkWidget *entry_pwd = NULL;
@@ -113,7 +90,7 @@ void creer_home_admin(GtkWidget *win){
     button = gtk_button_new();
     image = gtk_image_new_from_file("images/logout.png");
     gtk_button_set_image(button,image);
-    g_signal_connect (button, "clicked", logout, win);
+    g_signal_connect (button, "clicked", logout_ad, win);
     gtk_box_pack_start (GTK_BOX (vbox3), button, TRUE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(frame3), vbox3);
 
@@ -121,9 +98,49 @@ void creer_home_admin(GtkWidget *win){
 
 }
 
-void add_user (GtkWidget *win,gpointer *p){
+void valid_adduser(GtkWidget *win,gpointer p)
+{
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    employe emp;
+    emp.cinn = gtk_entry_get_text(GTK_ENTRY(cin));
+    emp.nom = gtk_entry_get_text(GTK_ENTRY(nom));
+    emp.username = gtk_entry_get_text(GTK_ENTRY(un));
+    emp.prenom = gtk_entry_get_text(GTK_ENTRY(prenom));
+    emp.dns = gtk_entry_get_text(GTK_ENTRY(dns));
+    emp.cnss = gtk_entry_get_text(GTK_ENTRY(cnss));
+    //emp.sexe = gtk_entry_get_text(GTK_ENTRY(sexe));
+    emp.sexe = "Hommmmme";
+    emp.email = gtk_entry_get_text(GTK_ENTRY(email));
+    emp.numerotel = gtk_entry_get_text(GTK_ENTRY(numerotel));
+    emp.ville = gtk_entry_get_text(GTK_ENTRY(ville));
+    emp.adresse = gtk_entry_get_text(GTK_ENTRY(adresse));
+    emp.pwd_u = gtk_entry_get_text(GTK_ENTRY(pwd_u));
+    if((strcmp(emp.cinn,"")==0) || (strcmp(emp.nom,"")==0) || (strcmp(emp.prenom,"")==0) || (strcmp(emp.dns,"")==0) || (strcmp(emp.cnss,"")==0) || (strcmp(emp.email,"")==0) || (strcmp(emp.numerotel,"")==0) )
+    {
+        show_error_invalide(p,"\nIl' y a des champs vide !");
+    }
+    else
+    {
+        if(add_user_db(emp)==-1)
+        {
+            show_error_invalide(p,"\nErreur ! verifier les données");
+        }
+        else
+        {
+            close_window(win,p);
+            store = gtk_list_store_new (NUM_COLS,G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+            show_users(store,iter);
+            gtk_tree_view_set_model (GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
+        }
+    }
 
-    GtkWidget *info,*espace,*lcin,*lnom,*lprenom,*ldns,*lcnss,*lsexe,*lemail,*lnumerotel,*lville,*ladresse,*lpwd_u;
+}
+
+void add_user (GtkWidget *win,gpointer *p)
+{
+
+    GtkWidget *info,*espace,*lcin,*lun,*lnom,*lprenom,*ldns,*lcnss,*lsexe,*lemail,*lnumerotel,*lville,*ladresse,*lpwd_u;
     GtkWidget *combo;
     GtkWidget *ok = NULL,*annuler = NULL;
     GtkWidget *vbox = NULL;
@@ -155,6 +172,12 @@ void add_user (GtkWidget *win,gpointer *p){
     gtk_box_pack_start (GTK_BOX (hbox), cin, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
+    lun = gtk_label_new("Nom d'utilisateur : ");
+    un =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lun, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), un, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
     hbox = gtk_hbox_new (TRUE, 6);
     lpwd_u = gtk_label_new("Mot de Passe (*) : ");
@@ -250,10 +273,45 @@ void add_user (GtkWidget *win,gpointer *p){
     gtk_widget_show_all (win);
 }
 
-void add_res (GtkWidget *win,gpointer *p){
+void valid_addres(GtkWidget *win,gpointer p)
+{
+    GtkTreeIter iter;
+    GtkTreeModel *model;
 
-    GtkWidget *espace,*info,*cin,*nom,*prenom,*email,*pwd_u;
-    GtkWidget *lcin,*lnom,*lprenom,*lemail,*lpwd_u,*lres;
+    employe emp;
+    emp.cinn = gtk_entry_get_text(GTK_ENTRY(cin));
+    emp.nom = gtk_entry_get_text(GTK_ENTRY(nom));
+    emp.username = gtk_entry_get_text(GTK_ENTRY(un));
+    emp.prenom = gtk_entry_get_text(GTK_ENTRY(prenom));
+    emp.email = gtk_entry_get_text(GTK_ENTRY(email));
+    emp.role = "responsable";
+    emp.pwd_u = gtk_entry_get_text(GTK_ENTRY(pwd_u));
+    if((strcmp(emp.cinn,"")==0) || (strcmp(emp.nom,"")==0) || (strcmp(emp.prenom,"")==0) || (strcmp(emp.email,"")==0) )
+    {
+        show_error_invalide(p,"\nIl' y a des champs vide !");
+    }
+    else
+    {
+        if(add_res_db(emp)==-1)
+        {
+            show_error_invalide(p,"\nErreur ! verifier les données");
+        }
+        else
+        {
+            close_window(win,p);
+            store = gtk_list_store_new (NUM_COLS,G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+            show_users(store,iter);
+            gtk_tree_view_set_model (GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
+        }
+    }
+
+}
+
+void add_res(GtkWidget *win,gpointer *p)
+{
+
+    GtkWidget *espace,*info;
+    GtkWidget *lcin,*lnom,*lprenom,*lemail,*lpwd_u,*lres,*lun;
     GtkWidget *ok = NULL,*annuler = NULL;
     GtkWidget *vbox = NULL;
     GtkWidget *hbox = NULL;
@@ -285,6 +343,13 @@ void add_res (GtkWidget *win,gpointer *p){
     hbox = gtk_hbox_new (TRUE, 6);
     gtk_box_pack_start (GTK_BOX (hbox), lcin, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), cin, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lun = gtk_label_new("Nom d'utilisateur : ");
+    un =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lun, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), un, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 
@@ -336,7 +401,300 @@ void add_res (GtkWidget *win,gpointer *p){
 
     hbox = gtk_hbox_new (TRUE, 6);
     ok = gtk_button_new_with_label ("Ajouter");
-    //g_signal_connect (ok, "clicked",NULL, win);
+    gtk_box_pack_start (GTK_BOX (hbox), ok, FALSE, TRUE, 0);
+    g_signal_connect (ok, "clicked",valid_addres, win);
+    annuler = gtk_button_new_with_label ("Annuler");
+    g_signal_connect (annuler, "clicked", close_window, win);
+    gtk_box_pack_start (GTK_BOX (hbox), annuler, FALSE, TRUE, 0);
+
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    gtk_widget_show_all (win);
+}
+
+void valid_modres(GtkWidget *win,gpointer *p)
+{
+
+}
+
+void modifier_res(GtkWidget *win,employe emp)
+{
+
+    GtkWidget *espace,*info;
+    GtkWidget *lcin,*lnom,*lprenom,*lemail,*lpwd_u,*lres,*lun;
+    GtkWidget *ok = NULL,*annuler = NULL;
+    GtkWidget *vbox = NULL;
+    GtkWidget *hbox = NULL;
+    GtkWidget *combo;
+
+    win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+    gtk_container_set_border_width (GTK_CONTAINER (win), 8);
+    gtk_window_set_title (GTK_WINDOW (win), "Modifier Information Responsable");
+    gtk_window_set_position (GTK_WINDOW (win), GTK_WIN_POS_CENTER);
+    gtk_widget_realize (win);
+    g_signal_connect (win, "destroy", gtk_main_quit, NULL);
+    gtk_window_set_resizable(GTK_WINDOW(win),FALSE);
+
+    /* Create the main window */
+
+    vbox = gtk_vbox_new (FALSE, 6);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_container_add (GTK_CONTAINER (win), vbox);
+
+    info = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(info), "\n<b>Modifier Responsable : </b>\n\n");
+
+    espace = gtk_label_new("\n\n");
+    gtk_box_pack_start (GTK_BOX (vbox), info, FALSE, FALSE, 0);
+
+    lcin = gtk_label_new("Cin : ");
+    cin =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(cin,emp.cinn);
+    gtk_box_pack_start (GTK_BOX (hbox), lcin, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), cin, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lun = gtk_label_new("Nom d'utilisateur : ");
+    un =  gtk_entry_new();
+    gtk_entry_set_text(un,emp.username);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lun, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), un, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    lpwd_u = gtk_label_new("Mot de Passe (*) : ");
+    pwd_u =  gtk_entry_new ();
+    gtk_entry_set_text(pwd_u,emp.pwd_u);
+    gtk_box_pack_start (GTK_BOX (hbox), lpwd_u, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), pwd_u, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+
+    lnom = gtk_label_new("Nom : ");
+    nom =  gtk_entry_new();
+    gtk_entry_set_text(nom,emp.nom);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lnom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), nom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lprenom = gtk_label_new("Prenom : ");
+    prenom =  gtk_entry_new();
+    gtk_entry_set_text(prenom,emp.prenom);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lprenom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), prenom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lres = gtk_label_new("Responsabilité : ");
+    combo = gtk_combo_box_text_new();
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "Finance");
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "Recrutement");
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "Tas7it");
+    gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lres, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lemail = gtk_label_new("Email : ");
+    email =  gtk_entry_new();
+    gtk_entry_set_text(email,emp.email);
+    gtk_entry_set_placeholder_text (email,"mail@mail.com");
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lemail, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), email, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    ok = gtk_button_new_with_label ("Modifier");
+    gtk_box_pack_start (GTK_BOX (hbox), ok, FALSE, TRUE, 0);
+    g_signal_connect (ok, "clicked",valid_modres, win);
+    annuler = gtk_button_new_with_label ("Annuler");
+    g_signal_connect (annuler, "clicked", close_window, win);
+    gtk_box_pack_start (GTK_BOX (hbox), annuler, FALSE, TRUE, 0);
+
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    gtk_widget_show_all (win);
+}
+
+void valid_modemp(GtkWidget *win,gpointer *p)
+{
+
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    employe emp;
+    emp.cinn = gtk_entry_get_text(GTK_ENTRY(cin));
+    emp.nom = gtk_entry_get_text(GTK_ENTRY(nom));
+    emp.username = gtk_entry_get_text(GTK_ENTRY(un));
+    emp.prenom = gtk_entry_get_text(GTK_ENTRY(prenom));
+    emp.dns = gtk_entry_get_text(GTK_ENTRY(dns));
+    emp.cnss = gtk_entry_get_text(GTK_ENTRY(cnss));
+    //emp.sexe = gtk_entry_get_text(GTK_ENTRY(sexe));
+    emp.sexe = "Hommmmme";
+    emp.email = gtk_entry_get_text(GTK_ENTRY(email));
+    emp.numerotel = gtk_entry_get_text(GTK_ENTRY(numerotel));
+    emp.ville = gtk_entry_get_text(GTK_ENTRY(ville));
+    emp.adresse = gtk_entry_get_text(GTK_ENTRY(adresse));
+    emp.pwd_u = gtk_entry_get_text(GTK_ENTRY(pwd_u));
+    if((strcmp(emp.cinn,"")==0) || (strcmp(emp.nom,"")==0) || (strcmp(emp.prenom,"")==0) || (strcmp(emp.dns,"")==0) || (strcmp(emp.cnss,"")==0) || (strcmp(emp.email,"")==0) || (strcmp(emp.numerotel,"")==0) )
+    {
+        show_error_invalide(p,"\nIl' y a des champs vide !");
+    }
+    else
+    {
+        if(update_emp(emp,id)==-1)
+        {
+            show_error_invalide(p,"\nErreur ! verifier les données");
+        }
+        else
+        {
+            close_window(win,p);
+            store = gtk_list_store_new (NUM_COLS,G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+            show_users(store,iter);
+            gtk_tree_view_set_model (GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
+        }
+    }
+
+}
+
+
+void modifier_emp(GtkWidget *win,employe emp)
+{
+    GtkWidget *info,*espace,*lcin,*lun,*lnom,*lprenom,*ldns,*lcnss,*lsexe,*lemail,*lnumerotel,*lville,*ladresse,*lpwd_u;
+    GtkWidget *combo;
+    GtkWidget *ok = NULL,*annuler = NULL;
+    GtkWidget *vbox = NULL;
+    GtkWidget *hbox = NULL;
+
+    win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+    gtk_container_set_border_width (GTK_CONTAINER (win), 8);
+    gtk_window_set_title (GTK_WINDOW (win), "Modifier Information employé");
+    gtk_window_set_position (GTK_WINDOW (win), GTK_WIN_POS_CENTER);
+    gtk_widget_realize (win);
+    g_signal_connect (win, "destroy", gtk_main_quit, NULL);
+    gtk_window_set_resizable(GTK_WINDOW(win),FALSE);
+
+    vbox = gtk_vbox_new (FALSE, 6);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_container_add (GTK_CONTAINER (win), vbox);
+
+    info = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(info), "\n<b>Modifier Information: </b>\n\n");
+    gtk_box_pack_start (GTK_BOX (vbox), info, FALSE, FALSE, 0);
+
+    lcin = gtk_label_new("Cin : ");
+    cin =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(cin,emp.cinn);
+    gtk_box_pack_start (GTK_BOX (hbox), lcin, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), cin, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lun = gtk_label_new("Nom d'utilisateur : ");
+    un =  gtk_entry_new();
+    gtk_entry_set_text(un,emp.username);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lun, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), un, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    lpwd_u = gtk_label_new("Mot de Passe (*) : ");
+    pwd_u =  gtk_entry_new ();
+    gtk_entry_set_text(pwd_u,emp.pwd_u);
+    gtk_box_pack_start (GTK_BOX (hbox), lpwd_u, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), pwd_u, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+
+    lnom = gtk_label_new("Nom : ");
+    nom =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(nom,emp.nom);
+    gtk_box_pack_start (GTK_BOX (hbox), lnom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), nom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lprenom = gtk_label_new("Prenom : ");
+    prenom =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(prenom,emp.prenom);
+    gtk_box_pack_start (GTK_BOX (hbox), lprenom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), prenom, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    ldns = gtk_label_new("Date naissance : ");
+    dns =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_placeholder_text (dns,"jj/mm/aaaa");
+    gtk_entry_set_text(dns,emp.dns);
+    gtk_box_pack_start (GTK_BOX (hbox), ldns, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), dns, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lcnss = gtk_label_new("CNSS : ");
+    cnss =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(cnss,emp.cnss);
+    gtk_box_pack_start (GTK_BOX (hbox), lcnss, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), cnss, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lsexe = gtk_label_new("Sexe : ");
+    combo = gtk_combo_box_text_new();
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "Homme");
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "Femme");
+    gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lsexe, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lemail = gtk_label_new("Email : ");
+    email =  gtk_entry_new();
+    gtk_entry_set_placeholder_text (email,"mail@mail.com");
+    gtk_entry_set_text(email,emp.email);
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), lemail, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), email, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lnumerotel = gtk_label_new("Numéro de téléphone : ");
+    numerotel =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(numerotel,emp.numerotel);
+    gtk_box_pack_start (GTK_BOX (hbox), lnumerotel, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), numerotel, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    lville = gtk_label_new("Ville : ");
+    ville =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(ville,emp.ville);
+    gtk_box_pack_start (GTK_BOX (hbox), lville, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), ville, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    ladresse = gtk_label_new("Adresse : ");
+    adresse =  gtk_entry_new();
+    hbox = gtk_hbox_new (TRUE, 6);
+    gtk_entry_set_text(adresse,emp.adresse);
+    gtk_box_pack_start (GTK_BOX (hbox), ladresse, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), adresse, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    hbox = gtk_hbox_new (TRUE, 6);
+    ok = gtk_button_new_with_label ("Modifier");
+    g_signal_connect (ok, "clicked",valid_modemp, win);
     gtk_box_pack_start (GTK_BOX (hbox), ok, FALSE, TRUE, 0);
     annuler = gtk_button_new_with_label ("Annuler");
     g_signal_connect (annuler, "clicked", close_window, win);
@@ -347,33 +705,68 @@ void add_res (GtkWidget *win,gpointer *p){
     gtk_widget_show_all (win);
 }
 
-void supp(GtkWidget *win,gpointer p){
-    printf("%s",p);
+void modifier (GtkWidget *win,gpointer *p)
+{
+    employe emp;
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    GtkTreeSelection *selection;
+    char *value;
+    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW(view) );
+    gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter);
+    gtk_tree_model_get(model, &iter, COL_ID, &value,  -1);
+    id = atoi(value);
+    get_user(&emp,id);
+    if(strcmp(emp.role,"responsable")==0)
+    {
+        modifier_res(win,emp);
+    }
+    else if(strcmp(emp.role,"role_admin")==0)
+    {
+        show_error_invalide(p,"\nContacter Responsable Informatique\npour modifier information admin.");
+    }
+    else if(strcmp(emp.role,"Employe")==0)
+    {
+        modifier_emp(win,emp);
+    }
+
+
 }
 
-void on_changed(GtkWidget *widget, gpointer p)
+void supp(GtkWidget *win,gpointer p)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
+    GtkTreeSelection *selection;
     char *value;
 
-    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(widget), &model, &iter))
+    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW(view) );
+    gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter);
+    gtk_tree_model_get(model, &iter, COL_ROLE, &value,  -1);
+    if(strcmp(value,"role_admin")==0)
+    {
+        show_error_invalide(p,"\nVous ne pouver pas supprimer un admin ! ");
+    }
+    else
     {
         gtk_tree_model_get(model, &iter, COL_ID, &value,  -1);
-        printf("%s is selected\n", value);
-        g_signal_connect (p, "clicked", supp,&value);
-        g_free(value);
+        delete_user(atoi(value));
     }
+    g_free(value);
+    store = gtk_list_store_new (NUM_COLS,G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+    show_users(store,iter);
+    gtk_tree_view_set_model (GTK_TREE_VIEW (view), GTK_TREE_MODEL(store));
 }
 
-void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p){
+void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p)
+{
 
-    gtk_widget_hide(p);
+    close_window(win,p);
     GtkWidget *button = NULL;
     GtkWidget *scrollbar = NULL;
     GtkWidget* text = NULL;
-    GtkWidget *vbox1 ,*vbox;
-    GtkWidget *hbox1 = NULL ,*hbox2;
+    GtkWidget *vbox1,*vbox;
+    GtkWidget *hbox1 = NULL,*hbox2;
     GtkWidget *listBox = NULL;
     GtkWidget *buttonImage;
     GtkWidget *image = NULL;
@@ -381,10 +774,7 @@ void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p){
 
     GtkCellRenderer     *renderer;
     GtkTreeModel        *model;
-    GtkWidget           *view;
-    GtkListStore  *store;
     GtkTreeIter iter;
-    GtkTreeSelection *selection;
 
     win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -426,26 +816,18 @@ void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p){
     gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),-1,"Prenom",renderer,"text", COL_PRENOM, NULL);
     renderer = gtk_cell_renderer_text_new ();
     gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),-1,"Role",renderer,"text", COL_ROLE,NULL);
-
     show_users(store,iter);
     gtk_tree_view_set_model (GTK_TREE_VIEW (view), GTK_TREE_MODEL(store));
-    g_object_unref (model);
-
     gtk_container_add (GTK_CONTAINER(scrollbar), view);
     gtk_container_add (GTK_CONTAINER (hbox1), scrollbar);
-
-    //gtk_box_pack_start (GTK_BOX (hbox1), listBox, TRUE, TRUE, 10);
     gtk_box_pack_start (GTK_HBOX(hbox1), vbox1, TRUE, TRUE, 20);
 
     button= gtk_button_new_with_label("Modifier");
     gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 10);
-
+    g_signal_connect (button, "clicked", modifier, win);
     button= gtk_button_new_with_label("Supprimer");
     gtk_box_pack_start (GTK_BOX (hbox2), button, TRUE, TRUE, 10);
-
-    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW(view) );
-    //g_signal_connect(selection, "changed", G_CALLBACK(on_changed), button);
-
+    g_signal_connect (button, "clicked", supp, win);
 
     button = gtk_button_new_with_label("Menu");
     g_signal_connect (button, "clicked", menu, win);
@@ -458,7 +840,7 @@ void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p){
     gtk_button_set_image(button,image);
     gtk_box_pack_start (GTK_BOX (vbox1), user, TRUE, TRUE, 10);
     gtk_box_pack_start (GTK_BOX (vbox1), button, TRUE, TRUE, 10);
-    g_signal_connect (button, "clicked", add_user, win);
+    g_signal_connect (button, "clicked", add_user, view);
 
     user = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(user), "<b>Ajouter Responsable : </b>");
@@ -474,22 +856,27 @@ void creer_fenetre_gerer_comptes (GtkWidget *win,gpointer *p){
     gtk_widget_show_all (win);
 }
 
-void sauv_conf(GtkWidget *win,gpointer p){
+void sauv_conf(GtkWidget *win,gpointer p)
+{
 
     char *sr,*dbu,*dbpass;
     sr=gtk_entry_get_text(GTK_ENTRY(server));
     dbu=gtk_entry_get_text(GTK_ENTRY(dbusername));
     dbpass=gtk_entry_get_text(GTK_ENTRY(dbpassword));
 
-    if((strcmp(sr,"")==0) || (strcmp(dbu,"")==0) || (strcmp(dbpass,"")==0)){
-         show_error_invalide(p,"\nIl' y a des champs vide !");
-    }else{
+    if((strcmp(sr,"")==0) || (strcmp(dbu,"")==0) || (strcmp(dbpass,"")==0))
+    {
+        show_error_invalide(p,"\nIl' y a des champs vide !");
+    }
+    else
+    {
         sauv_conf_file(sr,dbu,dbpass);
-        gtk_widget_hide(p);
+        close_window(win,p);
     }
 }
 
-void config (GtkWidget *win,gpointer *p){
+void config (GtkWidget *win,gpointer *p)
+{
     char sr[20],dbu[20],dbpass[20];
     GtkWidget *lserver,*lusername,*lpassword,*info,*espace;
     GtkWidget *ok = NULL,*annuler = NULL;

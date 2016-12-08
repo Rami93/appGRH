@@ -9,5 +9,6 @@ void close_window(GtkWidget *win,gpointer p);
 void sendmail(char to[],char body[]);
 void sauv_conf_file(char *sr,char *dbu,char *dbpass);
 void get_conf_file(char *sr,char *dbu,char *dbpass);
+void addsession(int id);
 
 #endif // USEFULLFN_H_INCLUDED

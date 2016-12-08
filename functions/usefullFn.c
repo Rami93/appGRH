@@ -1,4 +1,11 @@
 
+void get_conf_file(char sr[],char dbu[],char dbpass[]){
+    FILE *fichier;
+    fichier = fopen("data/db.txt", "r");
+    fscanf(fichier, "%s %s %s", sr, dbu, dbpass);
+    fclose(fichier);
+}
+
 void sendmail(char to[],char body[]) {
     char cmd[100];
     char tempFile[100];
@@ -28,11 +35,18 @@ void sauv_conf_file(char *sr,char *dbu,char *dbpass){
     fclose(fichier);
 }
 
-void get_conf_file(char sr[],char dbu[],char dbpass[]){
+void addsession(int id){
     FILE *fichier;
-    fichier = fopen("data/db.txt", "r");
-    fscanf(fichier, "%s %s %s", sr, dbu, dbpass);
+    fichier = fopen("data/session.txt", "w");
+    fprintf(fichier, "%d", id);
     fclose(fichier);
 }
 
-
+int Getsession(){
+    int id;
+    FILE *fichier;
+    fichier = fopen("data/session.txt", "r");
+    fscanf(fichier, "%d", id);
+    fclose(fichier);
+    return id;
+}

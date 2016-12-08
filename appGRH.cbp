@@ -51,6 +51,9 @@
 			<Option compilerVar="CC" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="include/TypeDef.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="include/Utilisateur.h" />
 		<Unit filename="include/dataBase.h">
 			<Option target="&lt;{~None~}&gt;" />
@@ -58,7 +61,9 @@
 		<Unit filename="include/dialog.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="include/interfaceAdmin.h" />
 		<Unit filename="include/interfaceConnection.h" />
+		<Unit filename="include/interfaceEmploye.h" />
 		<Unit filename="include/interfaceHome.h" />
 		<Unit filename="include/usefullFn.h">
 			<Option target="&lt;{~None~}&gt;" />
@@ -71,10 +76,10 @@
 			<Option compilerVar="CC" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="interface/interfaceAdmin.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Unit filename="interface/interfaceConnection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/interfaceEmploye.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="interface/interfaceHome.c">
