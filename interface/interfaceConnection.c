@@ -1,8 +1,6 @@
 #include "../include/interfaceConnection.h"
 #include "../include/interfaceHome.h"
 #include "../include/dialog.h"
-//#include "../include/usefullFn.h"
-
 
 GtkWidget *entry_login;
 GtkWidget *entry_pwd;
@@ -45,7 +43,7 @@ void authentification(GtkWidget *win ){
 
     /* Create the main window */
 
-    table=gtk_table_new(3,2,TRUE);
+    table=gtk_table_new(5,1,TRUE);
 
     vbox = gtk_vbox_new (FALSE, 6);
     hbox = gtk_hbox_new (TRUE, 6);
@@ -71,8 +69,8 @@ void authentification(GtkWidget *win ){
     gtk_box_pack_start (GTK_BOX (passwordbox), password, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (passwordbox), entry_pwd, TRUE, TRUE, 0);
 
-    gtk_table_attach(GTK_TABLE(table), usernamebox, 0, 2, 1, 30,  GTK_FILL ,GTK_SHRINK, 0, 0);
-    gtk_table_attach(GTK_TABLE(table), passwordbox, 0, 2, 2, 60,  GTK_FILL ,GTK_SHRINK, 0, 0);
+    gtk_table_attach(GTK_TABLE(table), usernamebox, 0, 1, 1, 2,  GTK_FILL ,GTK_SHRINK, 0, 0);
+    gtk_table_attach(GTK_TABLE(table), passwordbox, 0, 1, 3, 4,  GTK_FILL ,GTK_SHRINK, 0, 0);
 
     // ============ Here : FALSE ===============/
     gtk_box_pack_end (GTK_BOX (vbox), hbox, TRUE, FALSE, 0);

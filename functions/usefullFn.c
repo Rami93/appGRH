@@ -46,7 +46,7 @@ int Getsession(){
     int id;
     FILE *fichier;
     fichier = fopen("data/session.txt", "r");
-    fscanf(fichier, "%d", id);
+    fscanf(fichier, "%d", &id);
     fclose(fichier);
     return id;
 }

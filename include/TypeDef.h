@@ -17,4 +17,11 @@ enum
     NUM_COLS
 };
 
+enum
+{
+    COL_IDC=0,
+    COL_NOMC=1,
+    NUM_COLSC
+};
+
 #endif // TYPEDEF_H_INCLUDED

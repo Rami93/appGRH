@@ -32,22 +32,44 @@ void logout_ad(GtkWidget *win,gpointer p){
 
 void creer_home_admin(GtkWidget *win)
 {
+    GtkWidget *menubar;
+    GtkWidget *fileMenu;
+    GtkWidget *fileMi;
+    GtkWidget *quitMi;
     GtkWidget *button = NULL;
     GtkWidget* text = NULL;
     GtkWidget *vbox1,*vbox2, *vbox3 = NULL;
+    GtkWidget *vbox;
     GtkWidget *hbox = NULL;
     GtkWidget *entry_login = NULL;
     GtkWidget *entry_pwd = NULL;
     GtkWidget *image = NULL;
     GtkWidget *frame1,*frame2,*frame3;
+    GtkWidget *toolbar;
+    GtkToolItem *newTb;
+    GtkToolItem *openTb;
+    GtkToolItem *saveTb;
+    GtkToolItem *sep;
+    GtkToolItem *exitTb;
 
     win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-    gtk_container_set_border_width (GTK_CONTAINER (win), 8);
+    gtk_container_set_border_width (GTK_CONTAINER (win), 0);
     gtk_window_set_title (GTK_WINDOW (win), "Espace Administrateur");
     gtk_window_set_position (GTK_WINDOW (win), GTK_WIN_POS_CENTER);
     gtk_widget_realize (win);
     g_signal_connect (win, "destroy", gtk_main_quit, NULL);
+    vbox = gtk_vbox_new(FALSE, 0);
+    menubar = gtk_menu_bar_new();
+    fileMenu = gtk_menu_new();
+
+    fileMi = gtk_menu_item_new_with_label("File");
+    quitMi = gtk_menu_item_new_with_label("Quit");
+
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(fileMi), fileMenu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), quitMi);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menubar), fileMi);
+    gtk_box_pack_start(GTK_BOX(vbox), menubar, FALSE, FALSE, 0);
 
     /* Create the main window */
 
@@ -55,7 +77,29 @@ void creer_home_admin(GtkWidget *win)
     vbox1 = gtk_vbox_new (FALSE, 2);
     vbox2 = gtk_vbox_new (FALSE, 2);
     vbox3 = gtk_vbox_new (FALSE, 2);
-    gtk_container_add (GTK_CONTAINER (win), hbox);
+    gtk_container_add (GTK_CONTAINER (win), vbox);
+
+    toolbar = gtk_toolbar_new();
+  gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
+
+  newTb = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), newTb, -1);
+
+  openTb = gtk_tool_button_new_from_stock(GTK_STOCK_OPEN);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), openTb, -1);
+
+  saveTb = gtk_tool_button_new_from_stock(GTK_STOCK_SAVE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), saveTb, -1);
+
+  sep = gtk_separator_tool_item_new();
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), sep, -1);
+
+  exitTb = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), exitTb, -1);
+
+  gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, FALSE, 5);
+
+    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
     frame1 = gtk_frame_new("Gérer les comptes\n");
     gtk_frame_set_label_align(GTK_FRAME(frame1), 0, 0);
